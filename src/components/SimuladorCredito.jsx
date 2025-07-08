@@ -104,22 +104,33 @@ export default function SimuladorCredito() {
     pdf.save("simulador_credito.pdf");
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      calcularCuota();
+    }
+  };
+
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-gradient-to-tr from-white to-blue-50 shadow-xl rounded-3xl space-y-6">
-      <header className="text-center mb-12">
+    <div className="max-w-4xl mx-auto p-6" role="main" aria-label="Simulador de Crédito Hipotecario">
+      <header className="text-center mb-12" role="banner">
         <h1 className="text-4xl font-bold text-gray-800 mb-2">
-          Simulador de Crédito
+          Simulador de Crédito Hipotecario
         </h1>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <form onSubmit={calcularCuota} className="grid grid-cols-1 md:grid-cols-2 gap-4" role="form">
         <label className="flex flex-col">
-          <span className="text-gray-700 font-medium mb-1">Valor del inmueble:</span>
+          <span className="text-gray-700 font-medium mb-1" id="valor-inmueble-label">
+            Valor del inmueble:
+          </span>
           <input
             type="number"
             value={valorInmueble}
             onChange={(e) => setValorInmueble(Number(e.target.value))}
-            className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+            className="p-3 border border-gray-300 rounded-lg"
+            aria-labelledby="valor-inmueble-label"
+            min="0"
+            required
           />
         </label>
         <label className="flex flex-col">
@@ -128,7 +139,9 @@ export default function SimuladorCredito() {
             type="number"
             value={tasa}
             onChange={(e) => setTasa(Number(e.target.value))}
-            className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+            className="p-3 border border-gray-300 rounded-lg"
+            min="0"
+            required
           />
         </label>
         <label className="flex flex-col">
@@ -137,7 +150,9 @@ export default function SimuladorCredito() {
             type="number"
             value={plazo}
             onChange={(e) => setPlazo(Number(e.target.value))}
-            className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+            className="p-3 border border-gray-300 rounded-lg"
+            min="1"
+            required
           />
         </label>
         <label className="flex flex-col">
@@ -146,10 +161,12 @@ export default function SimuladorCredito() {
             type="number"
             value={ahorros}
             onChange={(e) => setAhorros(Number(e.target.value))}
-            className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+            className="p-3 border border-gray-300 rounded-lg"
+            min="0"
+            required
           />
         </label>
-      </div>
+      </form>
 
       <div className="flex items-center space-x-3 mt-4">
         <label className="flex items-center space-x-2">
@@ -202,7 +219,10 @@ export default function SimuladorCredito() {
       <div className="text-center">
         <button
           onClick={calcularCuota}
+          onKeyPress={handleKeyPress}
           className="bg-blue-700 text-white text-lg px-8 py-3 rounded-full hover:bg-blue-800 transition"
+          aria-label="Calcular cuota mensual"
+          tabIndex="0"
         >
           Calcular cuota mensual
         </button>
@@ -235,7 +255,12 @@ export default function SimuladorCredito() {
             </button>
           </div>
           <div ref={tablaRef} className="overflow-x-auto border rounded-lg shadow-sm">
-            <table className="w-full table-auto text-sm">
+            <table 
+              className="w-full table-auto text-sm" 
+              role="table" 
+              aria-label="Tabla de Amortización Anual"
+            >
+              <caption className="sr-only">Tabla de Amortización Anual</caption>
               <thead className="bg-blue-50">
                 <tr>
                   <th className="p-2 border">Año</th>
